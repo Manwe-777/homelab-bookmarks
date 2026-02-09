@@ -42,7 +42,6 @@ export function initDb(dbPath) {
 
     CREATE INDEX IF NOT EXISTS idx_visits_domain ON visits(domain);
     CREATE INDEX IF NOT EXISTS idx_visits_timestamp ON visits(timestamp);
-    CREATE INDEX IF NOT EXISTS idx_visits_minute ON visits(minute_of_day);
     CREATE INDEX IF NOT EXISTS idx_domain_stats_score ON domain_stats(score DESC);
   `);
 
@@ -58,6 +57,8 @@ export function initDb(dbPath) {
   } catch (e) {
     // Column already exists
   }
+
+  db.exec(`CREATE INDEX IF NOT EXISTS idx_visits_minute ON visits(minute_of_day)`);
 
   // Backfill minute_of_day from timestamp for existing visits
   db.exec(`
