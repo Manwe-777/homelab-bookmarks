@@ -140,7 +140,12 @@ mergeToRootCheckbox.addEventListener('change', () => {
 });
 
 addIgnoredBtn.addEventListener('click', () => {
-  const domain = newIgnoredInput.value.trim().toLowerCase();
+  let domain = newIgnoredInput.value.trim().toLowerCase();
+  // Normalize: extract hostname from URLs, strip www.
+  if (domain.includes('://')) {
+    try { domain = new URL(domain).hostname; } catch { /* keep as-is */ }
+  }
+  domain = domain.replace(/^www\./, '').split('/')[0];
   if (domain && !settings.ignoredDomains.includes(domain)) {
     settings.ignoredDomains.push(domain);
     saveSettings(settings);

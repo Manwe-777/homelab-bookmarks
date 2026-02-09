@@ -36,10 +36,24 @@ function getSettings(db) {
   };
 }
 
+function normalizeToHostname(input) {
+  let s = input.trim().toLowerCase();
+  // If it looks like a URL, parse the hostname out
+  if (s.includes('://')) {
+    try { s = new URL(s).hostname; } catch { /* fall through */ }
+  }
+  // Strip leading www.
+  s = s.replace(/^www\./, '');
+  // Strip any trailing path/slash
+  s = s.split('/')[0];
+  return s;
+}
+
 function isIgnored(domain, ignoredDomains) {
+  const bare = normalizeToHostname(domain);
   return ignoredDomains.some(ignored => {
-    // Exact match or subdomain match
-    return domain === ignored || domain.endsWith('.' + ignored);
+    const normalizedIgnored = normalizeToHostname(ignored);
+    return bare === normalizedIgnored || bare.endsWith('.' + normalizedIgnored);
   });
 }
 
