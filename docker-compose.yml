@@ -1,0 +1,22 @@
+services:
+  collector:
+    build: ./collector
+    ports:
+      - "${COLLECTOR_PORT:-3100}:${COLLECTOR_PORT:-3100}"
+    volumes:
+      - ./data:/app/data
+    environment:
+      - PORT=${COLLECTOR_PORT:-3100}
+      - DB_PATH=/app/data/bookmarks.db
+    restart: unless-stopped
+
+  widget:
+    build: ./dashboard-widget
+    ports:
+      - "${WIDGET_PORT:-3101}:${WIDGET_PORT:-3101}"
+    environment:
+      - PORT=${WIDGET_PORT:-3101}
+      - COLLECTOR_URL=http://collector:${COLLECTOR_PORT:-3100}
+    depends_on:
+      - collector
+    restart: unless-stopped

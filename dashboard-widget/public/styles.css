@@ -1,0 +1,407 @@
+/* Glance-compatible styling */
+:root {
+  font-size: 10px;
+
+  /* Glance color system */
+  --bgh: 240;
+  --bgs: 8%;
+  --bgl: 9%;
+  --bghs: var(--bgh), var(--bgs);
+  --cm: 1;
+  --tsm: 1;
+
+  --border-radius: 5px;
+  --widget-content-padding: 15px 17px;
+  --gap: 10px;
+
+  --color-primary: hsl(43, 50%, 70%);
+  --color-background: hsl(var(--bghs), var(--bgl));
+  --color-widget-background: hsl(var(--bghs), calc(var(--bgl) + 1%));
+  --color-widget-content-border: hsl(var(--bghs), calc(var(--bgl) + 4%));
+  --color-widget-background-highlight: hsl(var(--bghs), calc(var(--bgl) + 4%));
+
+  /* Text colors */
+  --ths: var(--bgh), calc(var(--bgs) * var(--tsm));
+  --color-text-highlight: hsl(var(--ths), calc(var(--cm) * 85%));
+  --color-text-base: hsl(var(--ths), calc(var(--cm) * 58%));
+  --color-text-subdue: hsl(var(--ths), calc(var(--cm) * 35%));
+
+  /* Font sizes */
+  --font-size-h4: 1.4rem;
+  --font-size-base: 1.3rem;
+  --font-size-h5: 1.2rem;
+  --font-size-h6: 1.1rem;
+
+  /* Grid config (set by JS) */
+  --columns: 5;
+  --rows: 1;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  height: 100%;
+  overflow: hidden;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-size: var(--font-size-base);
+  background: var(--color-widget-background);
+  color: var(--color-text-base);
+}
+
+/* Container fills viewport */
+.container {
+  height: 100%;
+  padding: var(--gap);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+/* Settings toggle - top right corner */
+.settings-toggle {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: transparent;
+  border: none;
+  color: var(--color-text-subdue);
+  cursor: pointer;
+  padding: 6px;
+  border-radius: var(--border-radius);
+  transition: color 0.15s, background 0.15s;
+  z-index: 10;
+  opacity: 0.5;
+}
+
+.settings-toggle:hover {
+  color: var(--color-text-base);
+  background: var(--color-widget-background);
+  opacity: 1;
+}
+
+/* Settings panel - full overlay */
+.settings-panel {
+  position: absolute;
+  inset: 0;
+  background: var(--color-widget-background);
+  padding: 1.5rem;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.settings-panel.hidden {
+  display: none;
+}
+
+/* Top row: columns, rows, merge checkbox */
+.settings-top {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.settings-group {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.settings-label {
+  font-size: var(--font-size-h6);
+  color: var(--color-text-subdue);
+}
+
+.settings-panel input[type="number"] {
+  background: var(--color-background);
+  border: 1px solid var(--color-widget-content-border);
+  border-radius: var(--border-radius);
+  padding: 0.4rem 0.6rem;
+  color: var(--color-text-base);
+  font-size: var(--font-size-base);
+  width: 5rem;
+}
+
+.settings-panel input:focus {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 1px;
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  font-size: var(--font-size-h6);
+  color: var(--color-text-subdue);
+}
+
+.checkbox-label input[type="checkbox"] {
+  width: 1.4rem;
+  height: 1.4rem;
+  accent-color: var(--color-primary);
+}
+
+/* Ignored domains row */
+.settings-ignored {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  min-height: 0;
+}
+
+.ignored-row {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  flex-wrap: wrap;
+}
+
+.ignored-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.ignored-item {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  background: var(--color-background);
+  border: 1px solid var(--color-widget-content-border);
+  border-radius: var(--border-radius);
+  padding: 0.2rem 0.5rem;
+  font-size: var(--font-size-h6);
+  color: var(--color-text-base);
+}
+
+.ignored-item button {
+  background: none;
+  border: none;
+  color: var(--color-text-subdue);
+  cursor: pointer;
+  padding: 0;
+  font-size: 1.2rem;
+  line-height: 1;
+}
+
+.ignored-item button:hover {
+  color: hsl(0, 70%, 70%);
+}
+
+.add-ignored {
+  display: flex;
+  gap: 0.4rem;
+}
+
+.add-ignored input[type="text"] {
+  background: var(--color-background);
+  border: 1px solid var(--color-widget-content-border);
+  border-radius: var(--border-radius);
+  padding: 0.3rem 0.6rem;
+  color: var(--color-text-base);
+  font-size: var(--font-size-h6);
+  width: 10rem;
+}
+
+.add-ignored button {
+  padding: 0.3rem 0.8rem;
+  background: var(--color-primary);
+  color: var(--color-background);
+  border: none;
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  font-size: var(--font-size-base);
+  font-weight: 500;
+}
+
+.settings-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.8rem;
+  margin-top: auto;
+  padding-top: 1rem;
+  flex-shrink: 0;
+}
+
+/* Buttons */
+.btn-primary, .btn-secondary, .btn-danger {
+  padding: 0.6rem 1.2rem;
+  border: none;
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  font-size: var(--font-size-h6);
+  font-weight: 500;
+}
+
+.btn-primary {
+  background: var(--color-primary);
+  color: var(--color-background);
+}
+
+.btn-secondary {
+  background: var(--color-widget-background-highlight);
+  color: var(--color-text-base);
+  border: 1px solid var(--color-widget-content-border);
+}
+
+.btn-danger {
+  background: hsl(0, 50%, 40%);
+  color: white;
+}
+
+/* Bookmarks grid - fills remaining space */
+.bookmarks {
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(var(--columns), 1fr);
+  grid-template-rows: repeat(var(--rows), 1fr);
+  gap: var(--gap);
+  min-height: 0;
+}
+
+/* Bookmark item - stretches to fill cell */
+.bookmark {
+  background: var(--color-widget-background);
+  border: 1px solid var(--color-widget-content-border);
+  border-radius: var(--border-radius);
+  text-decoration: none;
+  color: inherit;
+  transition: border-color 0.15s, background 0.15s;
+  box-shadow: 0px 2px 0px 0px hsl(var(--bghs), calc(var(--bgl) - 0.5%));
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 0.6rem;
+  padding: 0.8rem;
+  overflow: hidden;
+  position: relative;
+}
+
+.bookmark:hover {
+  border-color: var(--color-primary);
+  background: var(--color-widget-background-highlight);
+}
+
+/* Edit button on hover */
+.bookmark-edit {
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  background: var(--color-widget-background);
+  border: 1px solid var(--color-widget-content-border);
+  border-radius: var(--border-radius);
+  padding: 2px 4px;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.15s;
+  color: var(--color-text-subdue);
+  font-size: var(--font-size-h6);
+}
+
+.bookmark:hover .bookmark-edit {
+  opacity: 1;
+}
+
+.bookmark-edit:hover {
+  color: var(--color-text-highlight);
+}
+
+/* Bookmark icon */
+.bookmark-icon {
+  background: var(--color-widget-background-highlight);
+  border-radius: var(--border-radius);
+  padding: 0.5rem;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.bookmark-icon img {
+  width: 20px;
+  height: 20px;
+  opacity: 0.8;
+}
+
+/* Bookmark info */
+.bookmark-info {
+  width: 100%;
+  overflow: hidden;
+  min-width: 0;
+}
+
+.bookmark-title {
+  font-size: var(--font-size-base);
+  font-weight: 500;
+  color: var(--color-text-highlight);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Loading and error states */
+.loading,
+.error {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: var(--color-text-subdue);
+  font-size: var(--font-size-base);
+}
+
+.error {
+  color: hsl(0, 70%, 70%);
+}
+
+.hidden {
+  display: none !important;
+}
+
+/* Edit panel fields */
+.edit-header {
+  font-size: var(--font-size-h4);
+  color: var(--color-text-highlight);
+}
+
+.edit-fields {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  justify-content: center;
+}
+
+.edit-fields .settings-group {
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0.4rem;
+}
+
+.edit-input {
+  background: var(--color-background);
+  border: 1px solid var(--color-widget-content-border);
+  border-radius: var(--border-radius);
+  padding: 0.6rem 0.8rem;
+  color: var(--color-text-base);
+  font-size: var(--font-size-base);
+  width: 100%;
+}
+
+.edit-input:focus {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 1px;
+}
