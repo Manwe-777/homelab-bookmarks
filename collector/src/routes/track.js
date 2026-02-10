@@ -1,4 +1,5 @@
 import { Router } from 'express';
+import { getSettings, isIgnored } from '../utils.js';
 
 const router = Router();
 
@@ -24,37 +25,6 @@ function computeScore(visitCount, lastSeen) {
   const ageHours = (now - lastSeen) / (1000 * 60 * 60);
   const decayFactor = Math.exp(-ageHours / 168); // 1 week half-life
   return visitCount * decayFactor;
-}
-
-function getSettings(db) {
-  const mergeToRoot = db.prepare(`SELECT value FROM settings WHERE key = ?`).get('mergeToRoot');
-  const ignoredDomains = db.prepare(`SELECT value FROM settings WHERE key = ?`).get('ignoredDomains');
-
-  return {
-    mergeToRoot: mergeToRoot ? JSON.parse(mergeToRoot.value) : false,
-    ignoredDomains: ignoredDomains ? JSON.parse(ignoredDomains.value) : []
-  };
-}
-
-function normalizeToHostname(input) {
-  let s = input.trim().toLowerCase();
-  // If it looks like a URL, parse the hostname out
-  if (s.includes('://')) {
-    try { s = new URL(s).hostname; } catch { /* fall through */ }
-  }
-  // Strip leading www.
-  s = s.replace(/^www\./, '');
-  // Strip any trailing path/slash
-  s = s.split('/')[0];
-  return s;
-}
-
-function isIgnored(domain, ignoredDomains) {
-  const bare = normalizeToHostname(domain);
-  return ignoredDomains.some(ignored => {
-    const normalizedIgnored = normalizeToHostname(ignored);
-    return bare === normalizedIgnored || bare.endsWith('.' + normalizedIgnored);
-  });
 }
 
 router.post('/track', (req, res) => {

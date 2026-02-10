@@ -1,4 +1,5 @@
 import { Router } from 'express';
+import { getSettings, isIgnored } from '../utils.js';
 
 const router = Router();
 
@@ -42,6 +43,7 @@ router.get('/bookmarks', (req, res) => {
   const limit = parseInt(req.query.limit) || 20;
   const now = new Date();
   const currentMinute = now.getHours() * 60 + now.getMinutes();
+  const settings = getSettings(req.db);
 
   // Get base bookmarks
   const rows = req.db.prepare(`
@@ -49,10 +51,13 @@ router.get('/bookmarks', (req, res) => {
     FROM domain_stats
     ORDER BY score DESC
     LIMIT ?
-  `).all(limit * 2); // Fetch more to allow reordering
+  `).all(limit * 3); // Fetch extra to allow for filtering + reordering
+
+  // Filter out ignored domains
+  const filtered = rows.filter(row => !isIgnored(row.domain, settings.ignoredDomains));
 
   // Apply time-aware boosting
-  const boosted = rows.map(row => {
+  const boosted = filtered.map(row => {
     const timeBoost = getTimeBoost(req.db, row.domain, currentMinute);
     return {
       ...row,
