@@ -9,4 +9,5 @@ COPY . .
 
 EXPOSE 3101
 
-CMD ["node", "server.js"]
+# Use dev mode for auto-reload with node --watch
+CMD ["npm", "run", "dev"]

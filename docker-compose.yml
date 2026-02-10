@@ -5,6 +5,7 @@ services:
       - "${COLLECTOR_PORT:-3100}:${COLLECTOR_PORT:-3100}"
     volumes:
       - ./data:/app/data
+      - ./collector/src:/app/src
     environment:
       - PORT=${COLLECTOR_PORT:-3100}
       - DB_PATH=/app/data/bookmarks.db
@@ -14,6 +15,8 @@ services:
     build: ./dashboard-widget
     ports:
       - "${WIDGET_PORT:-3101}:${WIDGET_PORT:-3101}"
+    volumes:
+      - ./dashboard-widget/public:/app/public
     environment:
       - PORT=${WIDGET_PORT:-3101}
       - COLLECTOR_URL=http://collector:${COLLECTOR_PORT:-3100}

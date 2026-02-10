@@ -94,7 +94,7 @@ function renderIgnoredDomains() {
   ignoredListEl.innerHTML = settings.ignoredDomains.map(domain => `
     <div class="ignored-item">
       <span>${escapeHtml(domain)}</span>
-      <button data-domain="${escapeHtml(domain)}" title="Remove">×</button>
+      <button data-domain="${escapeHtml(domain)}" title="Remove">delete</button>
     </div>
   `).join('');
 

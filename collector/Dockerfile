@@ -12,4 +12,5 @@ COPY src ./src
 
 EXPOSE 3100
 
-CMD ["node", "src/index.js"]
+# Use dev mode for auto-reload with node --watch
+CMD ["npm", "run", "dev"]
