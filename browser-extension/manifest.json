@@ -5,7 +5,8 @@
   "description": "Tracks page visits for smart bookmark ranking",
   "permissions": [
     "tabs",
-    "storage"
+    "storage",
+    "idle"
   ],
   "host_permissions": [
     "http://server.local:3100/*"
