@@ -1,0 +1,23 @@
+{
+  "manifest_version": 3,
+  "name": "Smart Bookmarks Tracker",
+  "version": "1.0.0",
+  "description": "Tracks page visits for smart bookmark ranking",
+  "permissions": [
+    "tabs",
+    "storage",
+    "idle"
+  ],
+  "host_permissions": [
+    "<all_urls>"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": "icon.svg",
+    "default_title": "Smart Bookmarks Tracker"
+  },
+  "options_page": "options.html"
+}
