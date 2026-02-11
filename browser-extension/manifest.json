@@ -9,10 +9,15 @@
     "idle"
   ],
   "host_permissions": [
-    "http://server.local:3100/*"
+    "<all_urls>"
   ],
   "background": {
     "service_worker": "background.js"
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": "icon.svg",
+    "default_title": "Smart Bookmarks Tracker"
   },
   "options_page": "options.html"
 }

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <title>Smart Bookmarks</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+
+<body>
+  <div class="container">
+    <h3>Smart Bookmarks Tracker</h3>
+    
+    <div class="server-section">
+      <label for="serverUrl">Server URL</label>
+      <input type="text" id="serverUrl" placeholder="http://server.local:3100">
+      <button id="saveBtn">Save</button>
+    </div>
+
+    <div class="status-section">
+      <div class="status-indicator">
+        <span class="status-dot" id="statusDot"></span>
+        <span class="status-text" id="statusText">Checking...</span>
+      </div>
+      <button id="checkBtn" class="btn-secondary">Check Connection</button>
+    </div>
+
+    <div class="info-section">
+      <p class="info-text">This extension tracks your browsing activity to rank bookmarks.</p>
+    </div>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+
+</html>

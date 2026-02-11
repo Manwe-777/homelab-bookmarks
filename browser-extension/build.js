@@ -34,7 +34,7 @@ console.log(`Building extension with COLLECTOR_URL=${collectorUrl}`);
 mkdirSync(distDir, { recursive: true });
 
 // Copy static files
-const staticFiles = ['manifest.json', 'options.html'];
+const staticFiles = ['manifest.json', 'options.html', 'popup.html', 'popup.css', 'icon.svg'];
 for (const file of staticFiles) {
   cpSync(join(__dirname, file), join(distDir, file));
 }
@@ -63,10 +63,16 @@ optionsJs = optionsJs.replace(
 );
 writeFileSync(join(distDir, 'options.js'), optionsJs);
 
-// Update manifest host_permissions
+// Process popup.js - replace default URL
+let popupJs = readFileSync(join(__dirname, 'popup.js'), 'utf-8');
+popupJs = popupJs.replace(
+  /const DEFAULT_URL = '[^']+'/,
+  `const DEFAULT_URL = '${collectorUrl}'`
+);
+writeFileSync(join(distDir, 'popup.js'), popupJs);
+
+// Update manifest - keep <all_urls> for flexibility
 let manifest = JSON.parse(readFileSync(join(distDir, 'manifest.json'), 'utf-8'));
-const urlObj = new URL(collectorUrl);
-manifest.host_permissions = [`${urlObj.protocol}//${urlObj.host}/*`];
 writeFileSync(join(distDir, 'manifest.json'), JSON.stringify(manifest, null, 2));
 
 // Update options.html placeholder
@@ -76,5 +82,13 @@ optionsHtml = optionsHtml.replace(
   `placeholder="${collectorUrl}"`
 );
 writeFileSync(join(distDir, 'options.html'), optionsHtml);
+
+// Update popup.html placeholder
+let popupHtml = readFileSync(join(distDir, 'popup.html'), 'utf-8');
+popupHtml = popupHtml.replace(
+  /placeholder="[^"]+"/,
+  `placeholder="${collectorUrl}"`
+);
+writeFileSync(join(distDir, 'popup.html'), popupHtml);
 
 console.log(`Extension built to ${distDir}`);
