@@ -27,14 +27,18 @@ function loadEnv() {
 
 const env = loadEnv();
 const collectorUrl = env.COLLECTOR_URL || 'http://server.local:3100';
+const backupCollectorUrl = env.BACKUP_COLLECTOR_URL || '';
 
 console.log(`Building extension with COLLECTOR_URL=${collectorUrl}`);
+if (backupCollectorUrl) {
+  console.log(`  BACKUP_COLLECTOR_URL=${backupCollectorUrl}`);
+}
 
 // Create dist directory
 mkdirSync(distDir, { recursive: true });
 
 // Copy static files
-const staticFiles = ['manifest.json', 'options.html', 'popup.html', 'popup.css', 'icon.svg'];
+const staticFiles = ['manifest.json', 'popup.html', 'popup.css', 'icon.svg'];
 for (const file of staticFiles) {
   cpSync(join(__dirname, file), join(distDir, file));
 }
@@ -47,27 +51,39 @@ try {
   // Icons don't exist yet, skip
 }
 
-// Process background.js - replace default URL
+// Process background.js - replace default URLs
 let backgroundJs = readFileSync(join(__dirname, 'background.js'), 'utf-8');
 backgroundJs = backgroundJs.replace(
-  /const DEFAULT_COLLECTOR_URL = '[^']+'/,
+  /const DEFAULT_COLLECTOR_URL = '[^']*'/,
   `const DEFAULT_COLLECTOR_URL = '${collectorUrl}'`
+);
+backgroundJs = backgroundJs.replace(
+  /const DEFAULT_BACKUP_COLLECTOR_URL = '[^']*'/,
+  `const DEFAULT_BACKUP_COLLECTOR_URL = '${backupCollectorUrl}'`
 );
 writeFileSync(join(distDir, 'background.js'), backgroundJs);
 
-// Process options.js - replace default URL
+// Process options.js - replace default URLs
 let optionsJs = readFileSync(join(__dirname, 'options.js'), 'utf-8');
 optionsJs = optionsJs.replace(
-  /collectorUrl \|\| '[^']+'/,
-  `collectorUrl || '${collectorUrl}'`
+  /result\.collectorUrl \|\| '[^']*'/,
+  `result.collectorUrl || '${collectorUrl}'`
+);
+optionsJs = optionsJs.replace(
+  /result\.backupCollectorUrl \|\| '[^']*'/,
+  `result.backupCollectorUrl || '${backupCollectorUrl}'`
 );
 writeFileSync(join(distDir, 'options.js'), optionsJs);
 
-// Process popup.js - replace default URL
+// Process popup.js - replace default URLs
 let popupJs = readFileSync(join(__dirname, 'popup.js'), 'utf-8');
 popupJs = popupJs.replace(
-  /const DEFAULT_URL = '[^']+'/,
+  /const DEFAULT_URL = '[^']*'/,
   `const DEFAULT_URL = '${collectorUrl}'`
+);
+popupJs = popupJs.replace(
+  /const DEFAULT_BACKUP_URL = '[^']*'/,
+  `const DEFAULT_BACKUP_URL = '${backupCollectorUrl}'`
 );
 writeFileSync(join(distDir, 'popup.js'), popupJs);
 
@@ -75,20 +91,32 @@ writeFileSync(join(distDir, 'popup.js'), popupJs);
 let manifest = JSON.parse(readFileSync(join(distDir, 'manifest.json'), 'utf-8'));
 writeFileSync(join(distDir, 'manifest.json'), JSON.stringify(manifest, null, 2));
 
-// Update options.html placeholder
-let optionsHtml = readFileSync(join(distDir, 'options.html'), 'utf-8');
+// Copy and update options.html - anchor replacements to id= attributes
+let optionsHtml = readFileSync(join(__dirname, 'options.html'), 'utf-8');
 optionsHtml = optionsHtml.replace(
-  /placeholder="[^"]+"/,
-  `placeholder="${collectorUrl}"`
+  /(id="collectorUrl"\s+)placeholder="[^"]*"/,
+  `$1placeholder="${collectorUrl}"`
 );
+if (backupCollectorUrl) {
+  optionsHtml = optionsHtml.replace(
+    /(id="backupCollectorUrl"\s+)placeholder="[^"]*"/,
+    `$1placeholder="${backupCollectorUrl}"`
+  );
+}
 writeFileSync(join(distDir, 'options.html'), optionsHtml);
 
-// Update popup.html placeholder
+// Update popup.html placeholder - anchor to id= attribute
 let popupHtml = readFileSync(join(distDir, 'popup.html'), 'utf-8');
 popupHtml = popupHtml.replace(
-  /placeholder="[^"]+"/,
-  `placeholder="${collectorUrl}"`
+  /(id="serverUrl"\s+)placeholder="[^"]*"/,
+  `$1placeholder="${collectorUrl}"`
 );
+if (backupCollectorUrl) {
+  popupHtml = popupHtml.replace(
+    /(id="backupUrl"\s+)placeholder="[^"]*"/,
+    `$1placeholder="${backupCollectorUrl}"`
+  );
+}
 writeFileSync(join(distDir, 'popup.html'), popupHtml);
 
 console.log(`Extension built to ${distDir}`);

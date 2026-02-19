@@ -1,4 +1,5 @@
 const DEFAULT_COLLECTOR_URL = 'http://server.local:3100';
+const DEFAULT_BACKUP_COLLECTOR_URL = '';
 
 // Heartbeat interval: 5 minutes (300000ms)
 const HEARTBEAT_INTERVAL = 5 * 60 * 1000;
@@ -34,23 +35,40 @@ async function getCollectorUrl() {
   return result.collectorUrl || DEFAULT_COLLECTOR_URL;
 }
 
+async function getBackupCollectorUrl() {
+  const result = await chrome.storage.local.get(['backupCollectorUrl']);
+  return result.backupCollectorUrl || DEFAULT_BACKUP_COLLECTOR_URL;
+}
+
+function fetchWithTimeout(url, options, timeoutMs = 5000) {
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
+  return fetch(url, { ...options, signal: controller.signal }).finally(() => clearTimeout(timeoutId));
+}
+
 async function trackVisit(url, title) {
   if (shouldIgnore(url)) return;
 
   const collectorUrl = await getCollectorUrl();
+  const body = JSON.stringify({ url, title, timestamp: Date.now() });
+  const options = {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body
+  };
 
   try {
-    await fetch(`${collectorUrl}/api/track`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        url,
-        title,
-        timestamp: Date.now()
-      })
-    });
+    await fetchWithTimeout(`${collectorUrl}/api/track`, options);
   } catch (err) {
-    console.error('Failed to track visit:', err);
+    console.error('Primary collector failed:', err);
+    const backupUrl = await getBackupCollectorUrl();
+    if (backupUrl) {
+      try {
+        await fetchWithTimeout(`${backupUrl}/api/track`, options);
+      } catch (backupErr) {
+        console.error('Backup collector also failed:', backupErr);
+      }
+    }
   }
 }
 

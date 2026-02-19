@@ -12,15 +12,27 @@
     <h3>Smart Bookmarks Tracker</h3>
     
     <div class="server-section">
-      <label for="serverUrl">Server URL</label>
+      <label for="serverUrl">Primary Server URL</label>
       <input type="text" id="serverUrl" placeholder="http://server.local:3100">
+      <label for="backupUrl" class="optional-label">Backup Server URL (optional)</label>
+      <input type="text" id="backupUrl" placeholder="">
       <button id="saveBtn">Save</button>
     </div>
 
     <div class="status-section">
-      <div class="status-indicator">
-        <span class="status-dot" id="statusDot"></span>
-        <span class="status-text" id="statusText">Checking...</span>
+      <div class="status-row">
+        <span class="status-label">Primary</span>
+        <div class="status-indicator">
+          <span class="status-dot" id="primaryDot"></span>
+          <span class="status-text" id="primaryText">Checking...</span>
+        </div>
+      </div>
+      <div class="status-row">
+        <span class="status-label">Backup</span>
+        <div class="status-indicator">
+          <span class="status-dot idle" id="backupDot"></span>
+          <span class="status-text" id="backupText">Not configured</span>
+        </div>
       </div>
       <button id="checkBtn" class="btn-secondary">Check Connection</button>
     </div>
