@@ -263,6 +263,13 @@ body {
   pointer-events: auto;
 }
 
+.stats-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  text-decoration: none;
+}
+
 /* Buttons */
 .btn-primary, .btn-secondary, .btn-danger {
   padding: 0.6rem 1.2rem;

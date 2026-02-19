@@ -1,0 +1,404 @@
+/* Glance-compatible styling — inherits the same variable system as the main dashboard */
+:root {
+  font-size: 10px;
+
+  --bgh: 240;
+  --bgs: 8%;
+  --bgl: 9%;
+  --bghs: var(--bgh), var(--bgs);
+  --cm: 1;
+  --tsm: 1;
+
+  --border-radius: 5px;
+  --widget-gap: 23px;
+  --widget-content-padding: 15px 17px;
+
+  --color-primary: hsl(43, 50%, 70%);
+  --color-background: hsl(var(--bghs), var(--bgl));
+  --color-widget-background: hsl(var(--bghs), calc(var(--bgl) + 1%));
+  --color-widget-content-border: hsl(var(--bghs), calc(var(--bgl) + 4%));
+  --color-widget-background-highlight: hsl(var(--bghs), calc(var(--bgl) + 4%));
+
+  --ths: var(--bgh), calc(var(--bgs) * var(--tsm));
+  --color-text-highlight: hsl(var(--ths), calc(var(--cm) * 85%));
+  --color-text-base: hsl(var(--ths), calc(var(--cm) * 58%));
+  --color-text-subdue: hsl(var(--ths), calc(var(--cm) * 35%));
+
+  --color-negative: hsl(0, 70%, 60%);
+  --color-positive: hsl(120, 40%, 55%);
+
+  --font-size-h1: 1.7rem;
+  --font-size-h2: 1.6rem;
+  --font-size-h3: 1.5rem;
+  --font-size-h4: 1.4rem;
+  --font-size-base: 1.3rem;
+  --font-size-h5: 1.2rem;
+  --font-size-h6: 1.1rem;
+
+  --color-graph-gridlines: hsl(var(--bghs), calc(var(--bgl) + 6%));
+  --color-bar-fill: hsl(var(--bghs), calc(var(--bgl) + 16%));
+  --color-bar-fill-hover: hsl(var(--bghs), calc(var(--bgl) + 24%));
+  --color-bar-border: hsl(var(--bghs), calc(var(--bgl) + 22%));
+  --color-bar-border-hover: hsl(var(--bghs), calc(var(--bgl) + 32%));
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-size: var(--font-size-base);
+  background: var(--color-background);
+  color: var(--color-text-base);
+}
+
+/* Page layout */
+.page {
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 25px 20px;
+}
+
+.page-header {
+  margin-bottom: var(--widget-gap);
+}
+
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--color-text-subdue);
+  text-decoration: none;
+  font-size: var(--font-size-h5);
+  margin-bottom: 10px;
+  transition: color .15s;
+}
+
+.back-link:hover {
+  color: var(--color-text-base);
+}
+
+.page-title {
+  font-size: var(--font-size-h1);
+  font-weight: 600;
+  color: var(--color-text-highlight);
+}
+
+/* Widget cards */
+.widgets {
+  display: flex;
+  flex-direction: column;
+  gap: var(--widget-gap);
+}
+
+.widget {
+  background: var(--color-widget-background);
+  border: 1px solid var(--color-widget-content-border);
+  border-radius: var(--border-radius);
+  box-shadow: 0 2px 0 0 hsl(var(--bghs), calc(var(--bgl) - 0.5%));
+}
+
+.widget-header {
+  font-size: var(--font-size-h4);
+  font-weight: 600;
+  color: var(--color-text-highlight);
+  padding: 12px 17px;
+  border-bottom: 1px solid var(--color-widget-content-border);
+}
+
+.widget-content {
+  padding: var(--widget-content-padding);
+}
+
+.loading {
+  color: var(--color-text-subdue);
+  font-size: var(--font-size-h5);
+  text-align: center;
+  padding: 20px 0;
+}
+
+/* ================================================
+   Day of Week — horizontal bar chart
+   ================================================ */
+.day-chart {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.day-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 2px 0;
+  border-radius: var(--border-radius);
+  transition: background-color .1s;
+}
+
+.day-row:hover {
+  background: var(--color-widget-background-highlight);
+}
+
+.day-row.is-today .day-label {
+  color: var(--color-text-highlight);
+}
+
+.day-row.is-today .day-fill {
+  background: var(--color-primary);
+  opacity: 0.6;
+}
+
+.day-label {
+  font-size: var(--font-size-h5);
+  color: var(--color-text-subdue);
+  min-width: 7rem;
+  text-align: right;
+  transition: color .15s;
+}
+
+.day-track {
+  flex: 1;
+  height: 14px;
+  background: var(--color-widget-background-highlight);
+  border-radius: var(--border-radius);
+  overflow: hidden;
+}
+
+.day-fill {
+  height: 100%;
+  background: var(--color-bar-fill);
+  border-radius: var(--border-radius);
+  min-width: 2px;
+  transition: width .3s, background-color .2s;
+}
+
+.day-row:hover .day-fill {
+  background: var(--color-bar-fill-hover);
+}
+
+.day-value {
+  font-size: var(--font-size-h5);
+  color: var(--color-text-subdue);
+  min-width: 3.5rem;
+  text-align: right;
+  transition: color .15s;
+}
+
+.day-row:hover .day-label {
+  color: var(--color-text-base);
+}
+
+.day-row:hover .day-value {
+  color: var(--color-text-highlight);
+}
+
+/* ================================================
+   Hour of Day — DNS-stats-style vertical bar graph
+   ================================================ */
+.hour-graph {
+  --graph-height: 100px;
+  height: var(--graph-height);
+  position: relative;
+  margin-bottom: 2.5rem;
+}
+
+.hour-gridlines-container {
+  position: absolute;
+  inset: 0;
+}
+
+.hour-gridlines {
+  height: 100%;
+  width: 100%;
+}
+
+.hour-columns {
+  display: flex;
+  height: 100%;
+  position: relative;
+}
+
+.hour-column {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  flex-direction: column;
+  width: calc(100% / 24);
+  position: relative;
+}
+
+.hour-column::before {
+  content: '';
+  position: absolute;
+  inset: 1px 0;
+  opacity: 0;
+  background: var(--color-text-base);
+  transition: opacity .2s;
+}
+
+.hour-column:hover::before {
+  opacity: 0.05;
+}
+
+.hour-bar {
+  width: 10px;
+  height: calc((var(--bar-height) / 100) * var(--graph-height));
+  background: var(--color-bar-fill);
+  border: 1px solid var(--color-bar-border);
+  border-bottom: 0;
+  border-radius: var(--border-radius) var(--border-radius) 0 0;
+  transition: background-color .2s, border-color .2s, width .2s;
+  min-height: 3px;
+}
+
+.hour-column:hover .hour-bar {
+  width: 16px;
+  background: var(--color-bar-fill-hover);
+  border-color: var(--color-bar-border-hover);
+}
+
+.hour-column.is-now .hour-bar {
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+  opacity: 0.6;
+}
+
+.hour-column.is-now .hour-time {
+  color: var(--color-text-highlight);
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.hour-time {
+  position: absolute;
+  font-size: var(--font-size-h6);
+  inset-inline: 0;
+  text-align: center;
+  height: 2.5rem;
+  line-height: 2.5rem;
+  top: 100%;
+  user-select: none;
+  color: var(--color-text-subdue);
+  opacity: 0;
+  transform: translateY(-0.5rem);
+  transition: opacity .2s, transform .2s;
+}
+
+/* Show every even label by default */
+.hour-column:nth-child(even) .hour-time {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* On hover, show hovered label, hide others */
+.hour-columns:hover .hour-time {
+  opacity: 0;
+  transform: translateY(-0.5rem);
+}
+
+.hour-column:hover .hour-time {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.hour-count {
+  font-size: var(--font-size-h6);
+  color: var(--color-text-highlight);
+  position: absolute;
+  bottom: calc(100% + 2px);
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity .2s;
+}
+
+.hour-column:hover .hour-count {
+  opacity: 1;
+}
+
+/* ================================================
+   Top Sites — Glance-style list
+   ================================================ */
+.sites-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.site-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 7px 4px;
+  border-radius: var(--border-radius);
+  transition: background-color .1s;
+}
+
+.site-row + .site-row {
+  border-top: 1px solid var(--color-widget-content-border);
+}
+
+.site-row:hover {
+  background: var(--color-widget-background-highlight);
+}
+
+.site-rank {
+  font-size: var(--font-size-h5);
+  color: var(--color-text-subdue);
+  min-width: 2.2rem;
+  text-align: right;
+}
+
+.site-favicon {
+  width: 16px;
+  height: 16px;
+  border-radius: 2px;
+  opacity: 0.8;
+  flex-shrink: 0;
+}
+
+.site-domain {
+  flex: 1;
+  font-size: var(--font-size-h5);
+  color: var(--color-text-base);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
+}
+
+.site-count {
+  font-size: var(--font-size-h5);
+  color: var(--color-text-highlight);
+  min-width: 4rem;
+  text-align: right;
+}
+
+.site-bar-cell {
+  width: 80px;
+  flex-shrink: 0;
+}
+
+.site-bar-track {
+  height: 6px;
+  background: var(--color-widget-background-highlight);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.site-bar-fill {
+  height: 100%;
+  background: var(--color-bar-fill);
+  border-radius: 3px;
+  transition: width .3s;
+}
+
+.site-row:hover .site-bar-fill {
+  background: var(--color-bar-fill-hover);
+}
+
+.site-row:hover .site-domain {
+  color: var(--color-text-highlight);
+}

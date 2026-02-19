@@ -185,7 +185,7 @@ function renderBookmarks(bookmarks) {
   const items = bookmarks.slice(0, maxItems);
 
   bookmarksEl.innerHTML = items.map(b => {
-    const displayTitle = getShortName(b.domain);
+    const displayTitle = b.title || getShortName(b.domain);
     return `
     <a href="${escapeHtml(b.url)}" target="_blank" rel="noopener" class="bookmark" title="${escapeHtml(b.title || b.domain)}">
       <button class="bookmark-edit" data-domain="${escapeHtml(b.domain)}" data-url="${escapeHtml(b.url)}" data-title="${escapeHtml(b.title || '')}" onclick="event.preventDefault(); event.stopPropagation(); openEditModal(this);">✎</button>

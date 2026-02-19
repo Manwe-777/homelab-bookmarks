@@ -60,6 +60,13 @@ export function initDb(dbPath) {
 
   db.exec(`CREATE INDEX IF NOT EXISTS idx_visits_minute ON visits(minute_of_day)`);
 
+  // Add title_is_custom column for tracking manually edited titles
+  try {
+    db.exec(`ALTER TABLE domain_stats ADD COLUMN title_is_custom INTEGER DEFAULT 0`);
+  } catch (e) {
+    // Column already exists
+  }
+
   // Backfill minute_of_day from timestamp for existing visits
   db.exec(`
     UPDATE visits

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Browsing Stats</title>
+  <link rel="stylesheet" href="stats.css">
+</head>
+<body>
+  <div class="page">
+    <header class="page-header">
+      <a href="/" class="back-link">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><polyline points="15 18 9 12 15 6"></polyline></svg>
+        Bookmarks
+      </a>
+      <h1 class="page-title">Browsing Stats</h1>
+    </header>
+
+    <div class="widgets">
+      <!-- Day of week -->
+      <div class="widget">
+        <div class="widget-header">Activity by Day of Week</div>
+        <div class="widget-content">
+          <div id="dayChart" class="day-chart"><div class="loading">Loading...</div></div>
+        </div>
+      </div>
+
+      <!-- Hour of day -->
+      <div class="widget">
+        <div class="widget-header">Activity by Hour of Day</div>
+        <div class="widget-content">
+          <div id="hourChart" class="hour-graph"><div class="loading">Loading...</div></div>
+        </div>
+      </div>
+
+      <!-- Top sites -->
+      <div class="widget">
+        <div class="widget-header">Most Visited Sites</div>
+        <div class="widget-content">
+          <div id="topSites"><div class="loading">Loading...</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="stats.js"></script>
+</body>
+</html>

@@ -97,7 +97,7 @@ router.put('/bookmarks/:domain', (req, res) => {
 
   req.db.prepare(`
     UPDATE domain_stats
-    SET url = ?, title = ?
+    SET url = ?, title = ?, title_is_custom = 1
     WHERE domain = ?
   `).run(url, title, domain);
 

@@ -69,7 +69,7 @@ router.post('/track', (req, res) => {
 
   // Update domain stats
   const existing = req.db.prepare(`
-    SELECT visit_count, url FROM domain_stats WHERE domain = ?
+    SELECT visit_count, url, title_is_custom FROM domain_stats WHERE domain = ?
   `).get(domain);
 
   if (existing) {
@@ -81,14 +81,21 @@ router.post('/track', (req, res) => {
 
     req.db.prepare(`
       UPDATE domain_stats
-      SET visit_count = ?, last_seen = ?, title = COALESCE(?, title), score = ?, url = COALESCE(url, ?)
+      SET visit_count = ?, 
+          last_seen = ?, 
+          title = CASE 
+            WHEN title_is_custom = 1 THEN title 
+            ELSE COALESCE(?, title) 
+          END,
+          score = ?, 
+          url = COALESCE(url, ?)
       WHERE domain = ?
     `).run(newCount, ts, title, score, newUrl, domain);
   } else {
     const score = computeScore(1, ts);
     req.db.prepare(`
-      INSERT INTO domain_stats (domain, url, title, visit_count, last_seen, score)
-      VALUES (?, ?, ?, 1, ?, ?)
+      INSERT INTO domain_stats (domain, url, title, visit_count, last_seen, score, title_is_custom)
+      VALUES (?, ?, ?, 1, ?, ?, 0)
     `).run(domain, storeUrl, title || '', ts, score);
   }
 
