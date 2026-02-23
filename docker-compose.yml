@@ -17,6 +17,7 @@ services:
       - "${WIDGET_PORT:-3101}:${WIDGET_PORT:-3101}"
     volumes:
       - ./dashboard-widget/public:/app/public
+      - ./dashboard-widget/server.js:/app/server.js
     environment:
       - PORT=${WIDGET_PORT:-3101}
       - COLLECTOR_URL=http://collector:${COLLECTOR_PORT:-3100}

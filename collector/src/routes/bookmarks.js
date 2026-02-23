@@ -34,9 +34,10 @@ function getTimeBoost(db, domain, currentMinute) {
   const nearbyCount = nearbyVisits?.count || 0;
   const ratio = nearbyCount / totalVisits.count;
 
-  // Boost ranges from 0.5 (rarely visited at this time) to 1.5 (frequently visited)
-  // A site visited 100% at this time gets 1.5x, 0% gets 0.5x, 50% gets 1.0x
-  return 0.5 + ratio;
+  // More aggressive boost: ranges from 0.1 (rarely visited at this time) to 2.0 (frequently visited)
+  // A site visited 100% at this time gets 2.0x, 0% gets 0.1x, ~53% gets 1.0x (neutral)
+  // Formula: 0.1 + ratio * 1.9
+  return 0.1 + ratio * 1.9;
 }
 
 router.get('/bookmarks', (req, res) => {

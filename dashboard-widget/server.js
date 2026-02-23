@@ -86,7 +86,11 @@ app.put('/api/settings', async (req, res) => {
 // GET stats
 app.get('/api/stats', async (req, res) => {
   try {
-    const response = await fetch(`${COLLECTOR_URL}/api/stats`);
+    const domain = req.query.domain;
+    const url = domain 
+      ? `${COLLECTOR_URL}/api/stats?domain=${encodeURIComponent(domain)}`
+      : `${COLLECTOR_URL}/api/stats`;
+    const response = await fetch(url);
     const data = await response.json();
     res.json(data);
   } catch (err) {

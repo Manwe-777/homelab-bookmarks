@@ -1,13 +1,32 @@
 const DAY_NAMES = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 const DAY_SHORT = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
-async function loadStats() {
+let selectedDomain = null;
+let allSites = [];
+
+async function loadStats(domain = null) {
   try {
-    const res = await fetch('/api/stats');
+    // Update URL query parameter
+    const url = new URL(window.location);
+    if (domain) {
+      url.searchParams.set('domain', domain);
+    } else {
+      url.searchParams.delete('domain');
+    }
+    window.history.pushState({}, '', url);
+    
+    // Fetch data
+    const apiUrl = domain ? `/api/stats?domain=${encodeURIComponent(domain)}` : '/api/stats';
+    const res = await fetch(apiUrl);
     const data = await res.json();
+    
+    selectedDomain = domain;
+    allSites = data.topSites;
+    
     renderDayChart(data.byDayOfWeek);
-    renderHourChart(data.byHour);
-    renderTopSites(data.topSites);
+    renderHourChart(data.byHour, domain);
+    renderTopSites(data.topSites, domain);
+    renderSiteHeader(data.siteInfo);
   } catch (err) {
     console.error('Failed to load stats:', err);
   }
@@ -31,7 +50,7 @@ function renderDayChart(data) {
   `).join('');
 }
 
-function renderHourChart(data) {
+function renderHourChart(data, domain = null) {
   const container = document.getElementById('hourChart');
   const counts = new Array(24).fill(0);
   for (const row of data) counts[row.hour] = row.count;
@@ -69,7 +88,7 @@ function renderHourChart(data) {
   container.innerHTML = gridlines + `<div class="hour-columns">${columns}</div>`;
 }
 
-function renderTopSites(sites) {
+function renderTopSites(sites, selectedDomain = null) {
   const container = document.getElementById('topSites');
   if (!sites.length) {
     container.innerHTML = '<div class="loading">No data yet</div>';
@@ -79,7 +98,7 @@ function renderTopSites(sites) {
   const maxCount = sites[0].visit_count;
 
   container.innerHTML = `<div class="sites-list">${sites.map((site, i) => `
-    <div class="site-row">
+    <div class="site-row${site.domain === selectedDomain ? ' is-selected' : ''}" data-domain="${escapeHtml(site.domain)}">
       <span class="site-rank">${i + 1}</span>
       <img class="site-favicon" src="https://www.google.com/s2/favicons?domain=${encodeURIComponent(site.domain)}&sz=32" alt="">
       <span class="site-domain">${escapeHtml(site.domain)}</span>
@@ -91,6 +110,39 @@ function renderTopSites(sites) {
       <span class="site-count">${site.visit_count}</span>
     </div>
   `).join('')}</div>`;
+
+  // Add click handlers
+  container.querySelectorAll('.site-row').forEach(row => {
+    row.addEventListener('click', () => {
+      const domain = row.getAttribute('data-domain');
+      loadStats(domain);
+    });
+  });
+}
+
+function renderSiteHeader(siteInfo) {
+  const header = document.querySelector('.widget-header.hour-header');
+  if (!header) return;
+  
+  if (!siteInfo) {
+    header.innerHTML = 'Activity by Hour of Day';
+    return;
+  }
+  
+  header.innerHTML = `
+    <div class="site-header-content">
+      <img class="site-header-favicon" src="https://www.google.com/s2/favicons?domain=${encodeURIComponent(siteInfo.domain)}&sz=32" alt="">
+      <span class="site-header-title">${escapeHtml(siteInfo.title || siteInfo.domain)}</span>
+      <span class="site-header-domain">(${escapeHtml(siteInfo.domain)})</span>
+      <button class="clear-selection-btn" onclick="loadStats()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+        Clear
+      </button>
+    </div>
+  `;
 }
 
 function escapeHtml(str) {
@@ -99,4 +151,18 @@ function escapeHtml(str) {
   return div.innerHTML;
 }
 
-loadStats();
+// Load stats on page load, checking for domain query parameter
+function init() {
+  const params = new URLSearchParams(window.location.search);
+  const domain = params.get('domain');
+  loadStats(domain);
+}
+
+// Handle browser back/forward buttons
+window.addEventListener('popstate', () => {
+  const params = new URLSearchParams(window.location.search);
+  const domain = params.get('domain');
+  loadStats(domain);
+});
+
+init();

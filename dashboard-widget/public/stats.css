@@ -402,3 +402,73 @@ body {
 .site-row:hover .site-domain {
   color: var(--color-text-highlight);
 }
+
+.site-row {
+  cursor: pointer;
+}
+
+.site-row.is-selected {
+  background: var(--color-widget-background-highlight);
+  border-color: var(--color-primary);
+}
+
+.site-row.is-selected .site-domain {
+  color: var(--color-text-highlight);
+}
+
+.site-row.is-selected .site-bar-fill {
+  background: var(--color-primary);
+  opacity: 0.7;
+}
+
+/* ================================================
+   Site Header (when a site is selected)
+   ================================================ */
+.site-header-content {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.site-header-favicon {
+  width: 20px;
+  height: 20px;
+  border-radius: 3px;
+  opacity: 0.9;
+}
+
+.site-header-title {
+  color: var(--color-text-highlight);
+  font-weight: 600;
+}
+
+.site-header-domain {
+  color: var(--color-text-subdue);
+  font-size: var(--font-size-h5);
+  font-weight: 400;
+}
+
+.clear-selection-btn {
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: transparent;
+  border: 1px solid var(--color-widget-content-border);
+  color: var(--color-text-base);
+  padding: 4px 10px;
+  border-radius: var(--border-radius);
+  font-size: var(--font-size-h6);
+  cursor: pointer;
+  transition: all .15s;
+}
+
+.clear-selection-btn:hover {
+  background: var(--color-widget-background-highlight);
+  border-color: var(--color-bar-border);
+  color: var(--color-text-highlight);
+}
+
+.clear-selection-btn svg {
+  flex-shrink: 0;
+}
