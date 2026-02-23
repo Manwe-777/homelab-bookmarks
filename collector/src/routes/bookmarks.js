@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import { getSettings, isIgnored } from '../utils.js';
+import { getCurrentMinuteOfDay } from '../timezone.js';
 
 const router = Router();
 
@@ -42,8 +43,12 @@ function getTimeBoost(db, domain, currentMinute) {
 
 router.get('/bookmarks', (req, res) => {
   const limit = parseInt(req.query.limit) || 20;
-  const now = new Date();
-  const currentMinute = now.getHours() * 60 + now.getMinutes();
+  const timezoneOffset = parseInt(req.query.timezoneOffset);
+  
+  // Calculate current minute in client's timezone
+  const offset = !isNaN(timezoneOffset) ? timezoneOffset : new Date().getTimezoneOffset();
+  const currentMinute = getCurrentMinuteOfDay(offset);
+  
   const settings = getSettings(req.db);
 
   // Get base bookmarks

@@ -50,7 +50,12 @@ async function trackVisit(url, title) {
   if (shouldIgnore(url)) return;
 
   const collectorUrl = await getCollectorUrl();
-  const body = JSON.stringify({ url, title, timestamp: Date.now() });
+  const body = JSON.stringify({ 
+    url, 
+    title, 
+    timestamp: Date.now(),
+    timezoneOffset: new Date().getTimezoneOffset() // minutes offset from UTC
+  });
   const options = {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },

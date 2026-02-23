@@ -270,7 +270,8 @@ async function fetchBookmarks() {
 
   try {
     const limit = settings.columns * settings.rows;
-    const res = await fetch(`/api/bookmarks?limit=${limit}`);
+    const timezoneOffset = new Date().getTimezoneOffset();
+    const res = await fetch(`/api/bookmarks?limit=${limit}&timezoneOffset=${timezoneOffset}`);
     if (!res.ok) throw new Error('Failed to fetch');
 
     const data = await res.json();

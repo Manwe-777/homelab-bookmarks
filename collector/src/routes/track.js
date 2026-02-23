@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import { getSettings, isIgnored } from '../utils.js';
+import { calculateMinuteOfDay } from '../timezone.js';
 
 const router = Router();
 
@@ -28,7 +29,7 @@ function computeScore(visitCount, lastSeen) {
 }
 
 router.post('/track', (req, res) => {
-  const { url, title, timestamp } = req.body;
+  const { url, title, timestamp, timezoneOffset } = req.body;
 
   if (!url) {
     return res.status(400).json({ error: 'url is required' });
@@ -49,7 +50,10 @@ router.post('/track', (req, res) => {
 
   const ts = timestamp || Date.now();
   const date = new Date(ts);
-  const minuteOfDay = date.getHours() * 60 + date.getMinutes();
+  
+  // Calculate minute_of_day in the client's timezone
+  const offset = timezoneOffset !== undefined ? timezoneOffset : date.getTimezoneOffset();
+  const minuteOfDay = calculateMinuteOfDay(ts, offset);
 
   // Determine the URL to store
   const storeUrl = settings.mergeToRoot ? getRootUrl(url) : url;
