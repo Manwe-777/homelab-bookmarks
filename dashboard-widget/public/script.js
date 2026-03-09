@@ -24,8 +24,8 @@ const editSaveBtn = document.getElementById('edit-save');
 const themeChoicesEl = document.getElementById('theme-choices');
 
 const themes = [
-  { key: 'default', label: 'Dark',  bg: 'hsl(240,8%,9%)',    primary: 'hsl(43,50%,70%)',   negative: 'hsl(0,70%,60%)' },
-  { key: 'light',   label: 'Light', bg: 'hsl(220,10%,100%)', primary: 'hsl(220,70%,45%)',  negative: 'hsl(0,70%,50%)' },
+  { key: 'default', label: 'Dark',  bg: 'hsl(240,8%,9%)',   primary: 'hsl(43,50%,70%)',   negative: 'hsl(0,70%,60%)' },
+  { key: 'light',   label: 'Light', bg: 'hsl(240,13%,95%)', primary: 'hsl(230,100%,30%)', negative: 'hsl(0,70%,50%)' },
 ];
 
 function applyTheme(key) {

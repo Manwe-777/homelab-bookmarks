@@ -2,6 +2,7 @@
 :root {
   font-size: 10px;
 
+  --scheme: ;
   --bgh: 240;
   --bgs: 8%;
   --bgl: 9%;
@@ -16,13 +17,13 @@
   --color-primary: hsl(43, 50%, 70%);
   --color-background: hsl(var(--bghs), var(--bgl));
   --color-widget-background: hsl(var(--bghs), calc(var(--bgl) + 1%));
-  --color-widget-content-border: hsl(var(--bghs), calc(var(--bgl) + 4%));
-  --color-widget-background-highlight: hsl(var(--bghs), calc(var(--bgl) + 4%));
+  --color-widget-content-border: hsl(var(--bghs), calc(var(--scheme) (var(--scheme) var(--bgl) + 4%)));
+  --color-widget-background-highlight: hsl(var(--bghs), calc(var(--scheme) (var(--scheme) var(--bgl) + 4%)));
 
   --ths: var(--bgh), calc(var(--bgs) * var(--tsm));
-  --color-text-highlight: hsl(var(--ths), calc(var(--cm) * 85%));
-  --color-text-base: hsl(var(--ths), calc(var(--cm) * 58%));
-  --color-text-subdue: hsl(var(--ths), calc(var(--cm) * 35%));
+  --color-text-highlight: hsl(var(--ths), calc(var(--scheme) var(--cm) * 85%));
+  --color-text-base: hsl(var(--ths), calc(var(--scheme) var(--cm) * 58%));
+  --color-text-subdue: hsl(var(--ths), calc(var(--scheme) var(--cm) * 35%));
 
   --color-negative: hsl(0, 70%, 60%);
   --color-positive: hsl(120, 40%, 55%);
@@ -35,32 +36,21 @@
   --font-size-h5: 1.2rem;
   --font-size-h6: 1.1rem;
 
-  --color-graph-gridlines: hsl(var(--bghs), calc(var(--bgl) + 6%));
-  --color-bar-fill: hsl(var(--bghs), calc(var(--bgl) + 16%));
-  --color-bar-fill-hover: hsl(var(--bghs), calc(var(--bgl) + 24%));
-  --color-bar-border: hsl(var(--bghs), calc(var(--bgl) + 22%));
-  --color-bar-border-hover: hsl(var(--bghs), calc(var(--bgl) + 32%));
+  --color-graph-gridlines: hsl(var(--bghs), calc(var(--scheme) ((var(--scheme) var(--bgl)) + 6% * var(--cm))));
+  --color-bar-fill: hsl(var(--bghs), calc(var(--scheme) ((var(--scheme) var(--bgl)) + 16% * var(--cm))));
+  --color-bar-fill-hover: hsl(var(--bghs), calc(var(--scheme) ((var(--scheme) var(--bgl)) + 24% * var(--cm))));
+  --color-bar-border: hsl(var(--bghs), calc(var(--scheme) ((var(--scheme) var(--bgl)) + 22% * var(--cm))));
+  --color-bar-border-hover: hsl(var(--bghs), calc(var(--scheme) ((var(--scheme) var(--bgl)) + 32% * var(--cm))));
 }
 
-/* Light theme */
+/* Light theme - uses Glance's scheme inversion system */
 :root[data-theme="light"] {
-  --bgh: 220; --bgs: 10%; --bgl: 103%;
+  --scheme: 100% -;
+  --bgh: 240; --bgs: 13%; --bgl: 95%;
   --cm: 1; --tsm: 1;
-  --color-primary: hsl(220, 70%, 45%);
+  --color-primary: hsl(230, 100%, 30%);
   --color-negative: hsl(0, 70%, 50%);
   --color-positive: hsl(120, 50%, 35%);
-  --color-text-highlight: hsl(var(--ths), calc(var(--cm) * 12%));
-  --color-text-base: hsl(var(--ths), calc(var(--cm) * 30%));
-  --color-text-subdue: hsl(var(--ths), calc(var(--cm) * 50%));
-  --color-background: hsl(var(--bghs), calc(var(--bgl) - 3%));
-  --color-widget-background: hsl(var(--bghs), var(--bgl));
-  --color-widget-content-border: hsl(var(--bghs), calc(var(--bgl) - 12%));
-  --color-widget-background-highlight: hsl(var(--bghs), calc(var(--bgl) - 6%));
-  --color-bar-fill: hsl(var(--bghs), calc(var(--bgl) - 14%));
-  --color-bar-fill-hover: hsl(var(--bghs), calc(var(--bgl) - 20%));
-  --color-bar-border: hsl(var(--bghs), calc(var(--bgl) - 18%));
-  --color-bar-border-hover: hsl(var(--bghs), calc(var(--bgl) - 26%));
-  --color-graph-gridlines: hsl(var(--bghs), calc(var(--bgl) - 8%));
 }
 
 *, *::before, *::after {
@@ -119,7 +109,7 @@ body {
   background: var(--color-widget-background);
   border: 1px solid var(--color-widget-content-border);
   border-radius: var(--border-radius);
-  box-shadow: 0 2px 0 0 hsl(var(--bghs), calc(var(--bgl) - 0.5%));
+  box-shadow: 0 3px 0 0 hsl(var(--bghs), calc(var(--scheme) (var(--scheme) var(--bgl)) - 0.5%));
 }
 
 .widget-header {
