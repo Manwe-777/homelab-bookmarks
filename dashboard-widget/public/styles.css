@@ -418,59 +418,6 @@ body {
 }
 
 /* Theme picker */
-.theme-section {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-.theme-choices {
-  display: flex;
-  gap: 0.6rem;
-}
-
-.theme-preset {
-  background-color: var(--preview-bg);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 3px;
-  height: 2rem;
-  padding: 0 0.6rem;
-  border-radius: var(--border-radius);
-  cursor: pointer;
-  border: none;
-  position: relative;
-  transition: transform 0.1s;
-}
-
-.theme-preset:hover {
-  transform: scale(1.1);
-}
-
-.theme-preset::before {
-  content: '';
-  position: absolute;
-  inset: -3px;
-  border-radius: calc(var(--border-radius) + 2px);
-  border: 2px solid transparent;
-  transition: border-color 0.15s;
-}
-
-.theme-preset:hover::before {
-  border-color: var(--color-text-subdue);
-}
-
-.theme-preset.current::before {
-  border-color: var(--color-primary);
-}
-
-.theme-color {
-  background-color: var(--swatch);
-  width: 0.7rem;
-  height: 0.7rem;
-  border-radius: 2px;
-}
 
 /* Edit panel - optimized for wide banners */
 #edit-panel {

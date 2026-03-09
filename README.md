@@ -58,6 +58,44 @@ Add an iframe widget to your Glance config:
   height: 400
 ```
 
+#### Theme sync
+
+The widget automatically inherits Glance's active theme (including custom presets) via `postMessage`. Add the following to your `glance.yml` to enable it:
+
+```yaml
+document:
+  head: |
+    <script>
+      (function() {
+        function broadcast() {
+          var el = document.documentElement;
+          var cs = getComputedStyle(el);
+          var msg = {
+            glanceTheme: {
+              scheme: el.dataset.scheme || 'dark',
+              themeKey: el.dataset.theme || 'default',
+              bgh: cs.getPropertyValue('--bgh').trim(),
+              bgs: cs.getPropertyValue('--bgs').trim(),
+              bgl: cs.getPropertyValue('--bgl').trim(),
+              cm: cs.getPropertyValue('--cm').trim(),
+              tsm: cs.getPropertyValue('--tsm').trim(),
+              primary: cs.getPropertyValue('--color-primary').trim(),
+              positive: cs.getPropertyValue('--color-positive').trim(),
+              negative: cs.getPropertyValue('--color-negative').trim()
+            }
+          };
+          document.querySelectorAll('iframe').forEach(function(f) {
+            try { f.contentWindow.postMessage(msg, '*'); } catch(e) {}
+          });
+        }
+        new MutationObserver(broadcast).observe(document.documentElement, { attributes: true, attributeFilter: ['data-scheme', 'data-theme'] });
+        window.addEventListener('load', function() { setTimeout(broadcast, 500); });
+      })();
+    </script>
+```
+
+This script reads Glance's CSS variables and broadcasts them to all iframes whenever the theme changes. The widget picks them up automatically — no manual theme configuration needed.
+
 ## API
 
 ### POST /api/track

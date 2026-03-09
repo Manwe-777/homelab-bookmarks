@@ -20,40 +20,6 @@ const editCancelBtn = document.getElementById('edit-cancel');
 const editDeleteBtn = document.getElementById('edit-delete');
 const editSaveBtn = document.getElementById('edit-save');
 
-// Theme picker
-const themeChoicesEl = document.getElementById('theme-choices');
-
-const themes = [
-  { key: 'default', label: 'Dark',  bg: 'hsl(240,8%,9%)',   primary: 'hsl(43,50%,70%)',   negative: 'hsl(0,70%,60%)' },
-  { key: 'light',   label: 'Light', bg: 'hsl(240,13%,95%)', primary: 'hsl(230,100%,30%)', negative: 'hsl(0,70%,50%)' },
-];
-
-function applyTheme(key) {
-  if (key === 'default') {
-    document.documentElement.removeAttribute('data-theme');
-  } else {
-    document.documentElement.setAttribute('data-theme', key);
-  }
-  localStorage.setItem('smartBookmarksTheme', key);
-  renderThemeChoices(key);
-}
-
-function renderThemeChoices(currentKey) {
-  themeChoicesEl.innerHTML = themes.map(t => `
-    <button class="theme-preset${t.key === currentKey ? ' current' : ''}"
-            style="--preview-bg: ${t.bg}"
-            data-theme-key="${t.key}"
-            title="${t.label}">
-      <div class="theme-color" style="--swatch: ${t.primary}"></div>
-      <div class="theme-color" style="--swatch: ${t.negative}"></div>
-    </button>
-  `).join('');
-
-  themeChoicesEl.querySelectorAll('.theme-preset').forEach(btn => {
-    btn.addEventListener('click', () => applyTheme(btn.dataset.themeKey));
-  });
-}
-
 let currentEditDomain = null;
 
 // Default settings
@@ -332,10 +298,6 @@ async function init() {
     settings.ignoredDomains = serverSettings.ignoredDomains ?? settings.ignoredDomains;
     localStorage.setItem('smartBookmarksSettings', JSON.stringify(settings));
   }
-
-  // Apply saved theme
-  const savedTheme = localStorage.getItem('smartBookmarksTheme') || 'default';
-  applyTheme(savedTheme);
 
   applySettings();
   fetchBookmarks();
