@@ -5,6 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Browsing Stats</title>
   <link rel="stylesheet" href="stats.css">
+  <script>
+    // Apply saved theme immediately to prevent flash
+    const t = localStorage.getItem('smartBookmarksTheme');
+    if (t && t !== 'default') document.documentElement.setAttribute('data-theme', t);
+  </script>
 </head>
 <body>
   <div class="page">

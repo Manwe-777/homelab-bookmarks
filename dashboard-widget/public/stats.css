@@ -42,6 +42,27 @@
   --color-bar-border-hover: hsl(var(--bghs), calc(var(--bgl) + 32%));
 }
 
+/* Light theme */
+:root[data-theme="light"] {
+  --bgh: 220; --bgs: 10%; --bgl: 103%;
+  --cm: 1; --tsm: 1;
+  --color-primary: hsl(220, 70%, 45%);
+  --color-negative: hsl(0, 70%, 50%);
+  --color-positive: hsl(120, 50%, 35%);
+  --color-text-highlight: hsl(var(--ths), calc(var(--cm) * 12%));
+  --color-text-base: hsl(var(--ths), calc(var(--cm) * 30%));
+  --color-text-subdue: hsl(var(--ths), calc(var(--cm) * 50%));
+  --color-background: hsl(var(--bghs), calc(var(--bgl) - 3%));
+  --color-widget-background: hsl(var(--bghs), var(--bgl));
+  --color-widget-content-border: hsl(var(--bghs), calc(var(--bgl) - 12%));
+  --color-widget-background-highlight: hsl(var(--bghs), calc(var(--bgl) - 6%));
+  --color-bar-fill: hsl(var(--bghs), calc(var(--bgl) - 14%));
+  --color-bar-fill-hover: hsl(var(--bghs), calc(var(--bgl) - 20%));
+  --color-bar-border: hsl(var(--bghs), calc(var(--bgl) - 18%));
+  --color-bar-border-hover: hsl(var(--bghs), calc(var(--bgl) - 26%));
+  --color-graph-gridlines: hsl(var(--bghs), calc(var(--bgl) - 8%));
+}
+
 *, *::before, *::after {
   box-sizing: border-box;
   margin: 0;
