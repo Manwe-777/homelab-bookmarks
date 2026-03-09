@@ -2,7 +2,7 @@
 // Add to your glance.yml:
 //   document:
 //     head: |
-//       <script src="https://raw.githubusercontent.com/Manwe-777/homelab-bookmarks/main/glance-theme-broadcast.js"></script>
+//       <script src="https://cdn.jsdelivr.net/gh/Manwe-777/homelab-bookmarks@main/glance-theme-broadcast.js"></script>
 (function() {
   function broadcast() {
     var el = document.documentElement;

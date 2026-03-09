@@ -67,7 +67,7 @@ The widget automatically inherits Glance's active theme (including custom preset
 ```yaml
 document:
   head: |
-    <script src="https://raw.githubusercontent.com/Manwe-777/homelab-bookmarks/main/glance-theme-broadcast.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/Manwe-777/homelab-bookmarks@main/glance-theme-broadcast.js"></script>
 ```
 
 **Option B — inline (no external requests):**
