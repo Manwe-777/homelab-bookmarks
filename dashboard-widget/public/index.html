@@ -6,17 +6,14 @@
   <title>Smart Bookmarks</title>
   <link rel="stylesheet" href="styles.css">
   <script>
-    // Apply theme immediately to prevent flash (URL param > localStorage)
-    const p = new URLSearchParams(location.search).get('theme');
-    const t = p || localStorage.getItem('smartBookmarksTheme');
-    if (t && t !== 'default') document.documentElement.setAttribute('data-theme', t);
-    // Listen for Glance parent theme broadcasts with full CSS variable sync
-    window.addEventListener('message', function(e) {
-      if (e.data && e.data.glanceTheme) {
-        var gt = e.data.glanceTheme;
-        console.log('[Bookmarks] received Glance theme:', gt);
+    // Apply cached Glance theme immediately to prevent flash
+    (function() {
+      var KEY = 'glanceThemeCache';
+      var vars = ['bgh','bgs','bgl','cm','tsm'];
+      var colors = ['primary','positive','negative'];
+
+      function apply(gt) {
         var r = document.documentElement.style;
-        // Apply scheme (light/dark inversion)
         if (gt.scheme === 'light') {
           r.setProperty('--scheme', '100% -');
           document.documentElement.setAttribute('data-theme', 'light');
@@ -24,17 +21,25 @@
           r.setProperty('--scheme', ' ');
           document.documentElement.removeAttribute('data-theme');
         }
-        // Sync Glance's actual color values
-        if (gt.bgh) r.setProperty('--bgh', gt.bgh);
-        if (gt.bgs) r.setProperty('--bgs', gt.bgs);
-        if (gt.bgl) r.setProperty('--bgl', gt.bgl);
-        if (gt.cm) r.setProperty('--cm', gt.cm);
-        if (gt.tsm) r.setProperty('--tsm', gt.tsm);
-        if (gt.primary) r.setProperty('--color-primary', gt.primary);
-        if (gt.positive) r.setProperty('--color-positive', gt.positive);
-        if (gt.negative) r.setProperty('--color-negative', gt.negative);
+        vars.forEach(function(k) { if (gt[k]) r.setProperty('--' + k, gt[k]); });
+        colors.forEach(function(k) { if (gt[k]) r.setProperty('--color-' + k, gt[k]); });
       }
-    });
+
+      // Restore from cache on load
+      try {
+        var cached = JSON.parse(localStorage.getItem(KEY));
+        if (cached) apply(cached);
+      } catch(e) {}
+
+      // Listen for live updates from Glance
+      window.addEventListener('message', function(e) {
+        if (e.data && e.data.glanceTheme) {
+          var gt = e.data.glanceTheme;
+          apply(gt);
+          try { localStorage.setItem(KEY, JSON.stringify(gt)); } catch(e) {}
+        }
+      });
+    })();
   </script>
 </head>
 <body>
