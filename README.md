@@ -60,7 +60,17 @@ Add an iframe widget to your Glance config:
 
 #### Theme sync
 
-The widget automatically inherits Glance's active theme (including custom presets) via `postMessage`. Add the following to your `glance.yml` to enable it:
+The widget automatically inherits Glance's active theme (including custom presets) via `postMessage`. Add one of the following to your `glance.yml` to enable it.
+
+**Option A — external script (recommended):**
+
+```yaml
+document:
+  head: |
+    <script src="https://raw.githubusercontent.com/Manwe-777/homelab-bookmarks/main/glance-theme-broadcast.js"></script>
+```
+
+**Option B — inline (no external requests):**
 
 ```yaml
 document:
@@ -94,7 +104,7 @@ document:
     </script>
 ```
 
-This script reads Glance's CSS variables and broadcasts them to all iframes whenever the theme changes. The widget picks them up automatically — no manual theme configuration needed.
+Both options read Glance's CSS variables and broadcast them to all iframes whenever the theme changes. The widget picks them up automatically — no manual theme configuration needed.
 
 ## API
 
