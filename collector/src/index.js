@@ -5,6 +5,7 @@ import trackRoutes from './routes/track.js';
 import bookmarksRoutes from './routes/bookmarks.js';
 import settingsRoutes from './routes/settings.js';
 import statsRoutes from './routes/stats.js';
+import historyRoutes from './routes/history.js';
 
 const app = express();
 const PORT = process.env.PORT || 3100;
@@ -32,6 +33,7 @@ app.use('/api', trackRoutes);
 app.use('/api', bookmarksRoutes);
 app.use('/api', settingsRoutes);
 app.use('/api', statsRoutes);
+app.use('/api', historyRoutes);
 
 // Health check
 app.get('/health', (req, res) => {

@@ -98,6 +98,32 @@ app.get('/api/stats', async (req, res) => {
   }
 });
 
+// GET history — recent visits, deduplicated by URL
+app.get('/api/history', async (req, res) => {
+  try {
+    const params = new URLSearchParams();
+    if (req.query.hours)  params.set('hours',  req.query.hours);
+    if (req.query.limit)  params.set('limit',  req.query.limit);
+    if (req.query.unique) params.set('unique', req.query.unique);
+    const response = await fetch(`${COLLECTOR_URL}/api/history?${params}`);
+    const data = await response.json();
+    res.json(data);
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to fetch history' });
+  }
+});
+
+// GET digest — pre-aggregated AI-friendly summary
+app.get('/api/digest', async (req, res) => {
+  try {
+    const response = await fetch(`${COLLECTOR_URL}/api/digest`);
+    const data = await response.json();
+    res.json(data);
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to fetch digest' });
+  }
+});
+
 // Config endpoint for frontend
 app.get('/api/config', (req, res) => {
   res.json({
